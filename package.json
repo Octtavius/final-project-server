@@ -1,0 +1,19 @@
+{
+  "name": "socket-server-car-app",
+  "version": "1.0.0",
+  "description": "this is the server side of Interactive Cars App, which will handle user's assistance requests and staff operations",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Octavian Morcov",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "cookie-parser": "^1.4.3",
+    "express": "^4.15.2",
+    "http": "0.0.0",
+    "path": "^0.12.7",
+    "socket.io": "^1.7.3"
+  }
+}
