@@ -1,3 +1,28 @@
 <div>
     <h1>{{title}}</h1>
+
+    <div class="list-group">
+        <!--<a href="#" class="list-group-item active">-->
+            <!--Cras justo odio-->
+        <!--</a>-->
+        <p class="list-group-item" ng-repeat="req in assistanceRequests">
+            Client need assistance at the car {{req.carName}}
+            <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+            <button type="button"
+                    class="btn"
+                    ng-class="!req.accepted ? 'btn-primary' : 'btn-success'"
+                    ng-click="acceptRequest(req)"
+                    ng-disabled="req.accepted"
+            >
+                {{!req.accepted ? req.text : req.textWhenAccepted}}
+            </button>
+            <button type="button"
+                    ng-if="req.accepted"
+                    class="btn btn-danger"
+                    ng-click="cancelRequest(req)"
+            >
+                Cancel
+            </button>
+        </p>
+    </div>
 </div>
