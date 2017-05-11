@@ -46,14 +46,22 @@ io.on('connection', function(socket){
         console.log(typeof data);
     });
 
-    socket.on('client:cancel:request', function (data) {
-        console.log("client canceled request: " + data)
+    socket.on('client:cancel:request', function () {
+        console.log("client canceled request: ")
+        io.emit("client:send:cancel", socket.id)
     })
 
     socket.on('send:request', function(data){
         // var request = data.car;
         console.log("arrived request from car===::::: " + data);
+        data.socketId = socket.id;
+        console.log(socket.id);
         io.emit('request', data)
+    });
+
+    socket.on('notifyOf:arrival', function(clientId){
+        console.log(clientId);
+        io.to(clientId).emit("staff:arrived")
     });
 
     socket.on('disconnect', function(){
