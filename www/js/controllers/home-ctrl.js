@@ -47,7 +47,7 @@
 
                 $scope.acceptRequest = function (req) {
                     req.accepted = true;
-                    SocketService.emit("notify:accepted", true)
+                    SocketService.emit("notify:accepted", req.socketId)
                 };
 
                 //staf cancel request

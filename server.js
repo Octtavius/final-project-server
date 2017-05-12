@@ -30,9 +30,8 @@ io.on('connection', function(socket){
         fn(true)
     });
 
-    socket.on("notify:accepted", function (data) {
-        console.log(data);
-        console.log(typeof data);
+    socket.on("notify:accepted", function (clientId) {
+        io.to(clientId).emit("staff:accepted:request")
     });
 
     socket.on("notify:canceled", function (data) {
@@ -48,7 +47,7 @@ io.on('connection', function(socket){
 
     socket.on('client:cancel:request', function () {
         console.log("client canceled request: ")
-        io.emit("client:send:cancel", socket.id)
+        io.emit("client:send:cancel", socket.id);
     })
 
     socket.on('send:request', function(data){
