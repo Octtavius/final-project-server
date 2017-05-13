@@ -35,25 +35,36 @@
                     this.carName = carName;
                     this.accepted = false;
                     this.socketId = null;
+                    this.disabled = false;
                 };
 
                 $scope.assistanceRequests = [
-                    new Button("111", "BMW i3"),
-                    new Button("112", "Mercedes' AMG"),
-                    new Button("113", "VW Beetle"),
-                    new Button("114", "VW Scirocco"),
-                    new Button("114", "VW Scirocco")
+                    new Button("311", "BMW i3"),
+                    new Button("312", "Mercedes' AMG"),
+                    new Button("313", "VW Beetle"),
+                    new Button("314", "VW Scirocco")
                 ];
 
-                $scope.acceptRequest = function (req) {
+                $scope.acceptRequest = function (req, index) {
                     req.accepted = true;
-                    SocketService.emit("notify:accepted", req.socketId)
+                    SocketService.emit("notify:accepted", req.socketId);
+
+                    for (var i = 0; i < $scope.assistanceRequests.length; i++) {
+                        if(i !== index) {
+                            $scope.assistanceRequests[i].disabled = true;
+                        }
+                    }
                 };
 
                 //staf cancel request
-                $scope.cancelRequest = function (req) {
+                $scope.cancelRequest = function (req, index) {
                     req.accepted = false;
                     SocketService.emit("notify:canceled", true)
+                    for (var i = 0; i < $scope.assistanceRequests.length; i++) {
+                        if(i !== index) {
+                            $scope.assistanceRequests[i].disabled = false;
+                        }
+                    }
                 };
 
 

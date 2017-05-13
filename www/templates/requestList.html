@@ -6,9 +6,10 @@
         Client need assistance at the car {{req.carName}}
         <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
         <button type="button"
+                ng-disabled="req.disabled"
                 class="btn"
                 ng-class="!req.accepted ? 'btn-primary' : 'btn-info'"
-                ng-click="acceptRequest(req)"
+                ng-click="acceptRequest(req, $index)"
                 ng-disabled="req.accepted"
         >
             {{!req.accepted ? req.text : req.textWhenAccepted}}
@@ -23,7 +24,7 @@
         <button type="button"
                 ng-if="req.accepted"
                 class="btn btn-danger"
-                ng-click="cancelRequest(req)"
+                ng-click="cancelRequest(req, $index)"
         >
             Cancel
         </button>
