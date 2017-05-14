@@ -71,16 +71,6 @@ var userSockets = {};
 
 io.on('connection', function(socket){
     console.log('a user connected: ' + socket.id);
-    // //register client
-    // if ( userSockets[socket.id] == null) {
-    //     userSockets[socket.id] = socket.id;
-    // }
-    //
-    // socket.on("register:admin", function (data, fn) {
-    //     var admin = data.admin_id
-    //     console.log(admin);
-    //     fn("heyyy fipi")
-    // });
 
     socket.on("notify:accepted", function (clientId) {
         io.to(clientId).emit("staff:accepted:request")
