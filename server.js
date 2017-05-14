@@ -101,37 +101,103 @@ require('./config/passport')(passport);
 
 var userSockets = {};
 
+var Request = require('./models/request');
+
 io.on('connection', function(socket){
     console.log('a user connected: ' + socket.id);
 
     socket.on("notify:accepted", function (clientId) {
+        Request.findOne({socketId: clientId}, function (err, request) {
+            request.staffAcceptedRequest = true;
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+            })
+        })
         io.to(clientId).emit("staff:accepted:request")
     });
 
     socket.on("met:assistant", function () {
         console.log("met assistant");
+        Request.findOne({socketId: socket.id}, function (err, request) {
+            request.assistanceProvided = true;
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+            })
+        })
         io.emit("client:met", socket.id)
     });
 
     socket.on("notify:canceled", function (clientId) {
         console.log("notify client that staff canceld the rquests");
+        Request.findOne({socketId: clientId}, function (err, request) {
+            request.staffCanceled = true;
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+            })
+        })
         io.to(clientId).emit("staff:canceled:request")
     });
 
     socket.on("notify:done", function (clientId) {
+        Request.findOne({socketId: clientId}, function (err, request) {
+            request.assistanceProvided = true;
+            request.assistanceProvidedOn = Date.now();
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+            })
+        })
         io.to(clientId).emit("staff:reply")
     });
 
+    //client cancels the requests
     socket.on('client:cancel:request', function () {
-        console.log("client canceled request: ")
+        console.log("client canceled request: ");
         io.emit("client:send:cancel", socket.id);
+        Request.findOne({socketId: socket.id}, function (err, request) {
+            request.canceledByUser = true;
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+            })
+        })
     });
+
+    //client sent request
     socket.on('send:request', function(data){
         data.socketId = socket.id;
+
+        var req = new Request({
+            socketId: socket.id,
+            carId: data.carId
+        });
+
+        req.save(function (err) {
+            if(err) throw err;
+
+            console.log("request saved successfully")
+        })
+
         io.emit('request', data);
     });
 
     socket.on('notifyOf:arrival', function(clientId){
+        Request.findOne({socketId: clientId}, function (err, request) {
+            request.staffArrived = Date.now();
+            console.log(request);
+            request.save(function (err) {
+                if(err) throw err;
+                console.log("requests updated successfully");
+            })
+        })
         io.to(clientId).emit("staff:arrived")
     });
 
