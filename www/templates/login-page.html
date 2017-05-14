@@ -1,0 +1,19 @@
+
+<div class="col-sm-8 col-sm-offset-2">
+    <div class="jumbotron text-center">
+        <h1><span class="fa fa-sign-in"></span> Login</h1>
+
+        <!--<% if (message != null) { %>-->
+        <!--<div class="alert-danger"><%= message %></div>-->
+        <!--<% } %>-->
+
+        <form ng-submit="submit()">
+            <input ng-model="admin.email" type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon1">
+            <input ng-model="admin.password" type="password" class="form-control" placeholder="Staff ID" aria-describedby="basic-addon1">
+            <button class="btn btn-default" type="submit">Submit</button>
+        </form>
+    </div>
+    <hr>
+    <span class="fa fa-sign-in"> Don't have an account?<a href="#!/signup"> Signup</a></span>
+    <p>Or go <a href="#!/">home</a>.</p>
+</div>

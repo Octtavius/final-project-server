@@ -3,7 +3,23 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path = require('path');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+
+
+var port = process.env.PORT || 3000;
+
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var mongoose = require('mongoose');
+var flash = require('connect-flash');
+var session = require('express-session');
+
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url);
 
 // //++++++++++++++++++++++++++++++++++++++++++++++++++
 // //++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -56,16 +72,32 @@ var bodyParser = require('body-parser')
 // //++++++++++++++++++++++++++++++++++++++++++++++++++
 // //++++++++++++++++++++++++++++++++++++++++++++++++++
 
-var port = process.env.PORT || 3000;
+var Routes =  require('./routes/routes-index');
+var users = require('./routes/users');
 
 app.use(express.static('public'));
 
 app.use(express.static(path.join(__dirname, '/')));
 app.use(express.static(path.join(__dirname, 'www')));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-var Routes =  require('./routes/routes-index');
+app.use(session({
+    secret: 'shhsecret',
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+     }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+
 app.use('/', Routes);
+// app.use('/users', users);
+
+require('./config/passport')(passport);
 
 var userSockets = {};
 
@@ -107,6 +139,29 @@ io.on('connection', function(socket){
         console.log('user disconnected');
     });
 });
+
+app.use(function(req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
+// if (app.get('env') === 'development') {
+//     app.use(function(err, req, res, next) {
+//         res.status(err.status || 500);
+//         res.render('error', {
+//             message: err.message,
+//             error: err
+//         });
+//     });
+// }
+// app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//         message: err.message,
+//         error: {}
+//     });
+// });
+
 
 http.listen(port, function(){
     console.log('listening on *:' + port);
