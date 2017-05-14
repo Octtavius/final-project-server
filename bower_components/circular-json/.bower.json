@@ -1,0 +1,15 @@
+{
+  "name": "circular-json",
+  "homepage": "https://github.com/WebReflection/circular-json",
+  "version": "0.3.1",
+  "_release": "0.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.1",
+    "commit": "54e5be62cf7f8b761ad120ea7a986da7fbffa5b9"
+  },
+  "_source": "https://github.com/WebReflection/circular-json.git",
+  "_target": "^0.3.1",
+  "_originalSource": "circular-json",
+  "_direct": true
+}
